@@ -36,7 +36,7 @@ services:
     volumes:
       - ./backend:/app
       - ./frontend:/app/frontend
-    command: sh -c "npm install && node index.js"
+    command: sh -c "npm install && npx wait-on tcp:mysql:3306 && node index.js"
     expose:
       - "3000"
     depends_on:
@@ -54,3 +54,4 @@ services:
 
 volumes:
   mysql_data:
+
