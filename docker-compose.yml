@@ -36,9 +36,12 @@ services:
     volumes:
       - ./backend:/app
       - ./frontend:/app/frontend
-    command: sh -c "npm install && npx wait-on tcp:mysql:3306 && node index.js"
+    environment:
+      MYSQL_USER: sghuser
+      MYSQL_PASSWORD: sghpassword
+    command: sh -c "./wait-for-mysql.sh && npm install && node index.js"
     ports:
-      - "3000:3000"  # Corregido para exponer puerto al host
+      - "3000:3000"
     depends_on:
       - mysql
 
