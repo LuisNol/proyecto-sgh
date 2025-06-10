@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   mysql:
-    image: mysql:8.4
+    image: mysql:8.2
     container_name: mysql_sgh
     restart: always
     environment:
@@ -35,8 +35,9 @@ services:
     working_dir: /app
     volumes:
       - ./backend:/app
-      - ./frontend:/app/frontend
     environment:
+      MYSQL_HOST: mysql
+      MYSQL_DATABASE: sgh_db
       MYSQL_USER: sghuser
       MYSQL_PASSWORD: sghpassword
     command: sh -c "./wait-for-mysql.sh && npm install && node index.js"
@@ -45,15 +46,6 @@ services:
     depends_on:
       - mysql
 
-  nginx:
-    image: nginx:latest
-    container_name: nginx_sgh
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
-    depends_on:
-      - backend
-
 volumes:
   mysql_data:
+
