@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql_sgh
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: sgh_db
+      MYSQL_USER: sghuser
+      MYSQL_PASSWORD: sghpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_sgh
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: rootpassword
+    depends_on:
+      - mysql
+
+  backend:
+    image: node:18
+    container_name: node_backend_sgh
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+      - ./frontend:/app/frontend
+    ports:
+      - "3000:3000"
+    command: sh -c "npm install && node index.js"
+    depends_on:
+      - mysql
+
+volumes:
+  mysql_data:

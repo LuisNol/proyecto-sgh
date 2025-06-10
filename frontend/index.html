@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión Hospitalaria</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: #4A90E2;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .header h2 {
+            color: #333;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .header h3 {
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 20px;
+            align-items: end;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .input-group {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .input-group label {
+            display: block;
+            background: #333;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-bottom: 10px;
+            width: fit-content;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            background: #f9f9f9;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #4A90E2;
+            background: white;
+        }
+
+        .search-btn {
+            background: #5CB85C;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .search-btn:hover {
+            background: #4CAE4C;
+        }
+
+        .results-section {
+            margin-top: 30px;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+
+        .results-table th {
+            background: #f8f9fa;
+            color: #333;
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+            border-right: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .results-table th:last-child {
+            border-right: none;
+        }
+
+        .results-table td {
+            padding: 12px;
+            border-right: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            color: #333;
+            text-align: center;
+            background: white;
+            font-size: 14px;
+        }
+
+        .results-table td:last-child {
+            border-right: none;
+        }
+
+        .results-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .no-results {
+            text-align: center;
+            color: #666;
+            padding: 40px;
+            font-size: 16px;
+        }
+
+        .error {
+            color: #d9534f;
+            background: #f2dede;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            border: 1px solid #ebccd1;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #4A90E2;
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .input-row {
+                flex-direction: column;
+            }
+            
+            .input-group {
+                min-width: 100%;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .results-table {
+                font-size: 12px;
+            }
+            
+            .results-table th,
+            .results-table td {
+                padding: 8px 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🏥</div>
+            <h1>**DIRECTA HUÁNUCO**</h1>
+            <h2>** Hospital Tingo María **</h2>
+            <h3>**Sistema de Gestión Hospitalaria (SGH)**</h3>
+        </div>
+
+        <div class="form-section">
+            <div class="input-row">
+                <div class="input-group">
+                    <label for="dni">Ingresar Número de DNI:</label>
+                    <input type="text" id="dni" placeholder="Ingresar Número de DNI" maxlength="8">
+                </div>
+
+                <div class="input-group">
+                    <label for="fecha_nacimiento">Ingrese Fecha de Nacimiento:</label>
+                    <input type="date" id="fecha_nacimiento" placeholder="Ingrese Fecha de Nacimiento">
+                </div>
+
+                <button class="search-btn" onclick="consultarCita()">
+                    Buscar citas orgadas
+                </button>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <div id="resultado">
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>N°</th>
+                            <th>Fecha</th>
+                            <th>Consultorio</th>
+                            <th>Prescriptor</th>
+                            <th>Turno</th>
+                            <th>N° Cupo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los resultados aparecerán aquí -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function consultarCita() {
+            const dni = document.getElementById('dni').value;
+            const fechaNacimiento = document.getElementById('fecha_nacimiento').value;
+            const resultado = document.getElementById('resultado');
+
+            if (!dni || !fechaNacimiento) {
+                resultado.innerHTML = '<div class="error">❌ Completa todos los campos</div>';
+                return;
+            }
+
+            // Mostrar loading
+            resultado.innerHTML = '<div class="loading">Buscando citas...</div>';
+
+            try {
+                const res = await fetch(`/citas?dni=${dni}&fecha_nacimiento=${fechaNacimiento}`);
+                const data = await res.json();
+
+                if (res.status === 404) {
+                    resultado.innerHTML = `
+                        <table class="results-table">
+                            <thead>
+                                <tr>
+                                    <th>N°</th>
+                                    <th>Fecha</th>
+                                    <th>Consultorio</th>
+                                    <th>Prescriptor</th>
+                                    <th>Turno</th>
+                                    <th>N° Cupo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6" style="text-align: center; padding: 20px; color: #d9534f;">
+                                        ❌ No se encontró ninguna cita con esos datos
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `;
+                    return;
+                }
+
+                // Mostrar resultados en tabla
+                let tablaHTML = `
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>Fecha</th>
+                                <th>Consultorio</th>
+                                <th>Prescriptor</th>
+                                <th>Turno</th>
+                                <th>N° Cupo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                data.forEach((cita, index) => {
+                    tablaHTML += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${cita.fecha_cita}</td>
+                            <td>${cita.consultorio}</td>
+                            <td>${cita.prescriptor}</td>
+                            <td>${cita.turno}</td>
+                            <td>${cita.numero_cupo}</td>
+                        </tr>
+                    `;
+                });
+
+                tablaHTML += '</tbody></table>';
+                resultado.innerHTML = tablaHTML;
+
+            } catch (error) {
+                console.error(error);
+                resultado.innerHTML = `
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>Fecha</th>
+                                <th>Consultorio</th>
+                                <th>Prescriptor</th>
+                                <th>Turno</th>
+                                <th>N° Cupo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 20px; color: #d9534f;">
+                                    ❌ Error al conectar con el servidor
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `;
+            }
+        }
+
+        // Permitir búsqueda con Enter
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                consultarCita();
+            }
+        });
+
+        // Formatear DNI mientras se escribe
+        document.getElementById('dni').addEventListener('input', function(e) {
+            this.value = this.value.replace(/\D/g, '').substring(0, 8);
+        });
+    </script>
+</body>
+</html>
