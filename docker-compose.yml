@@ -38,7 +38,14 @@ services:
       - ./frontend:/app/frontend
     ports:
       - "3000:3000"
-    command: sh -c "npm install && node index.js"
+    command: sh -c "
+      apt-get update && apt-get install -y netcat &&
+      npm install &&
+      echo '⏳ Esperando a que MySQL esté disponible...' &&
+      until nc -z mysql 3306; do sleep 2; done &&
+      echo '✅ MySQL disponible. Iniciando servidor Node...' &&
+      node index.js
+    "
     depends_on:
       - mysql
 
