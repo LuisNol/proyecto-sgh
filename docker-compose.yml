@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   mysql:
-    image: mysql:5.7
+    image: mysql:8.2
     container_name: mysql_sgh
     restart: always
     environment:
@@ -15,6 +15,14 @@ services:
     volumes:
       - ./db:/docker-entrypoint-initdb.d
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysql", "-h", "localhost", "-u", "root", "-prootpassword", "-e", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - sgh_network
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -27,7 +35,10 @@ services:
       PMA_USER: root
       PMA_PASSWORD: rootpassword
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
+    networks:
+      - sgh_network
 
   backend:
     image: node:18
@@ -40,7 +51,15 @@ services:
       - "3000:3000"
     command: sh -c "npm install && node index.js"
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - sgh_network
 
 volumes:
   mysql_data:
+
+networks:
+  sgh_network:
+    driver: bridge
