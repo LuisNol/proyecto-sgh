@@ -35,11 +35,12 @@ services:
     working_dir: /app
     volumes:
       - ./backend:/app
+      - ./frontend:/app/frontend
     ports:
       - "3000:3000"
+    command: sh -c "npm install && node index.js"
     depends_on:
       - mysql
-    command: sh -c "apt update && apt install -y netcat && chmod +x wait-for-it.sh && ./wait-for-it.sh mysql:3306 -- npm install && node index.js"
 
 volumes:
   mysql_data:
