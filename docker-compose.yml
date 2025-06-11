@@ -30,21 +30,11 @@ services:
       - mysql
 
   backend:
-    image: node:18
+    build:
+      context: ./backend
     container_name: node_backend_sgh
-    working_dir: /app
-    volumes:
-      - ./backend:/app
-      - ./frontend:/app/frontend
     ports:
       - "3000:3000"
-    command: >
-      sh -c "apt-get update && apt-get install -y netcat &&
-      npm install &&
-      echo '⏳ Esperando a MySQL...' &&
-      until nc -z mysql 3306; do sleep 2; done &&
-      echo '✅ MySQL disponible. Iniciando backend...' &&
-      node index.js"
     depends_on:
       - mysql
 
