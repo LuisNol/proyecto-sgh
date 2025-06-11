@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   mysql:
-    image: mysql:8.4
+    image: mysql:5.7
     container_name: mysql_sgh
     restart: always
     environment:
@@ -30,7 +30,7 @@ services:
       - mysql
 
   backend:
-    build: ./backend
+    image: node:18
     container_name: node_backend_sgh
     working_dir: /app
     volumes:
@@ -39,7 +39,7 @@ services:
       - "3000:3000"
     depends_on:
       - mysql
-    command: sh -c "./wait-for-it.sh mysql:3306 -- npm install && node index.js"
+    command: sh -c "apt update && apt install -y netcat && chmod +x wait-for-it.sh && ./wait-for-it.sh mysql:3306 -- npm install && node index.js"
 
 volumes:
   mysql_data:
