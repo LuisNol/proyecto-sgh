@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIRECTA HUÁNUCO - Hospital Tingo María</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header h2 {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+
+        .header h3 {
+            font-size: 1.3em;
+            font-weight: 300;
+        }
+
+        .filters {
+            background: #f8f9fa;
+            padding: 30px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 20px;
+            align-items: end;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .filter-group input, .filter-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .filter-group input:focus, .filter-group select:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(86, 171, 47, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            transform: scale(1.2);
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-weight: 500;
+            color: #495057;
+            cursor: pointer;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4facfe;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            padding: 30px;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;     
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+            flex-wrap: wrap;
+        }
+
+        .results-count {
+            font-size: 18px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .results-summary {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .summary-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .summary-dot.disponible { background: #28a745; }
+        .summary-dot.ocupado { background: #dc3545; }
+        .summary-dot.total { background: #6f42c1; }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 12px;
+            text-align: center;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #dee2e6;
+            transition: background-color 0.3s ease;
+        }
+
+        tr:hover td {
+            background-color: #f8f9fa;
+        }
+
+        .cupos-disponibles {
+            font-weight: bold;
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .cupos-disponibles.alto {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+        }
+
+        .cupos-disponibles.medio {
+            background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
+        }
+
+        .cupos-disponibles.bajo {
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+        }
+
+        .cupos-disponibles.cero {
+            background: linear-gradient(135deg, #434343 0%, #000000 100%);
+        }
+
+        .turno {
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .turno.mañana {
+            color: #007bff;
+        }
+
+        .turno.tarde {
+            color: #28a745;
+        }
+
+        .turno.noche {
+            color: #6f42c1;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .no-results-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #f5c6cb;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #c3e6cb;
+        }
+
+        @media (max-width: 768px) {
+            .filter-row {
+                flex-direction: column;
+            }
+            
+            .filter-group {
+                min-width: 100%;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .header h2 {
+                font-size: 1.5em;
+            }
+            
+            .table-container {
+                font-size: 14px;
+            }
+            
+            th, td {
+                padding: 8px 6px;
+            }
+
+            .results-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .filter-options {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 DIRECTA HUÁNUCO</h1>
+            <h2>Hospital Tingo María</h2>
+            <h3>Sistema de Gestión Hospitalaria (SGH)</h3>
+        </div>
+
+        <div class="filters">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label for="fechaInicio">Fecha Inicio:</label>
+                    <input type="date" id="fechaInicio" name="fechaInicio">
+                </div>
+                <div class="filter-group">
+                    <label for="fechaFin">Fecha Fin:</label>
+                    <input type="date" id="fechaFin" name="fechaFin">
+                </div>
+                <div class="filter-group">
+                    <label for="consultorio">Consultorio:</label>
+                    <input type="text" id="consultorio" name="consultorio" placeholder="Buscar Consultorio">
+                </div>
+                <div class="filter-group">
+                    <label for="turno">Turno:</label>
+                    <select id="turno" name="turno">
+                        <option value="">Todos los turnos</option>
+                        <option value="mañana">Mañana</option>
+                        <option value="tarde">Tarde</option>
+                        <option value="noche">Noche</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="filter-options">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="mostrarDisponibles" checked>
+                    <label for="mostrarDisponibles">Mostrar disponibles</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="mostrarOcupados" checked>
+                    <label for="mostrarOcupados">Mostrar ocupados (0 cupos)</label>
+                </div>
+            </div>
+
+            <button class="btn" onclick="buscarCuposDisponibles()">
+                🔍 Buscar citas disponibles
+            </button>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Cargando información...</p>
+        </div>
+
+        <div class="results" id="results" style="display: none;">
+            <div class="results-header">
+                <div class="results-count" id="resultsCount">0 cupos encontrados</div>
+                <div class="results-summary" id="resultsSummary"></div>
+                <div class="results-range" id="resultsRange"></div>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>N°</th>
+                            <th>Fecha</th>
+                            <th>Turno</th>
+                            <th>Consultorio</th>
+                            <th>Cupos Totales</th>
+                            <th>Cupos Ocupados</th>
+                            <th>Cupos Disponibles</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="no-results" id="noResults" style="display: none;">
+            <div class="no-results-icon">📅</div>
+            <h3>No se encontraron cupos</h3>
+            <p>Intenta con diferentes filtros de búsqueda</p>
+        </div>
+
+        <div id="errorMessage" style="display: none;"></div>
+    </div>
+
+    <script>
+        // Configurar fechas por defecto
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const fechaInicio = document.getElementById('fechaInicio');
+            const fechaFin = document.getElementById('fechaFin');
+            
+            // Fecha de hoy
+            fechaInicio.value = today.toISOString().split('T')[0];
+            
+            // Fecha un mes después
+            const nextMonth = new Date(today);
+            nextMonth.setMonth(today.getMonth() + 1);
+            fechaFin.value = nextMonth.toISOString().split('T')[0];
+            
+            // Cargar cupos automáticamente
+            buscarCuposDisponibles();
+        });
+
+        async function buscarCuposDisponibles() {
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            const noResults = document.getElementById('noResults');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Mostrar loading
+            loading.style.display = 'block';
+            results.style.display = 'none';
+            noResults.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            try {
+                // Obtener valores de filtros
+                const fechaInicio = document.getElementById('fechaInicio').value;
+                const fechaFin = document.getElementById('fechaFin').value;
+                const consultorio = document.getElementById('consultorio').value;
+                const turno = document.getElementById('turno').value;
+                const mostrarDisponibles = document.getElementById('mostrarDisponibles').checked;
+                const mostrarOcupados = document.getElementById('mostrarOcupados').checked;
+
+                // Construir parámetros de consulta
+                const params = new URLSearchParams();
+                
+                if (consultorio) params.append('consultorio', consultorio);
+                if (turno) params.append('turno', turno);
+                // Agregar parámetro para mostrar todos los cupos (incluyendo los ocupados)
+                params.append('mostrar_todos', 'true');
+                
+                const response = await fetch(`/cupos-disponibles?${params.toString()}`);
+                const data = await response.json();
+                
+                loading.style.display = 'none';
+                
+                if (response.ok && data.cupos && data.cupos.length > 0) {
+                    // Filtrar por rango de fechas en el frontend
+                    let cuposFiltrados = data.cupos;
+                    
+                    if (fechaInicio && fechaFin) {
+                        cuposFiltrados = data.cupos.filter(cupo => {
+                            const fechaCupo = new Date(cupo.fecha);
+                            const inicio = new Date(fechaInicio);
+                            const fin = new Date(fechaFin);
+                            return fechaCupo >= inicio && fechaCupo <= fin;
+                        });
+                    }
+
+                    // Filtrar por disponibilidad según checkboxes
+                    cuposFiltrados = cuposFiltrados.filter(cupo => {
+                        const cuposDisponibles = cupo.cupos_disponibles || 0;
+                        if (cuposDisponibles > 0 && mostrarDisponibles) return true;
+                        if (cuposDisponibles === 0 && mostrarOcupados) return true;
+                        return false;
+                    });
+                    
+                    if (cuposFiltrados.length > 0) {
+                        mostrarResultados(cuposFiltrados, fechaInicio, fechaFin);
+                    } else {
+                        mostrarSinResultados();
+                    }
+                } else {
+                    mostrarSinResultados();
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                loading.style.display = 'none';
+                mostrarError('Error al conectar con el servidor: ' + error.message);
+            }
+        }
+
+        function mostrarResultados(cupos, fechaInicio, fechaFin) {
+            const results = document.getElementById('results');
+            const resultsCount = document.getElementById('resultsCount');
+            const resultsRange = document.getElementById('resultsRange');
+            const resultsSummary = document.getElementById('resultsSummary');
+            const tableBody = document.getElementById('tableBody');
+            
+            // Calcular estadísticas
+            const totalCupos = cupos.reduce((sum, cupo) => sum + (cupo.cupos_totales || 0), 0);
+            const totalOcupados = cupos.reduce((sum, cupo) => sum + (cupo.cupos_ocupados || 0), 0);
+            const totalDisponibles = cupos.reduce((sum, cupo) => sum + (cupo.cupos_disponibles || 0), 0);
+            const cuposConDisponibilidad = cupos.filter(cupo => (cupo.cupos_disponibles || 0) > 0).length;
+            const cuposOcupados = cupos.filter(cupo => (cupo.cupos_disponibles || 0) === 0).length;
+
+            resultsCount.textContent = `${cupos.length} consultorios encontrados`;
+            
+            // Mostrar resumen estadístico
+            resultsSummary.innerHTML = `
+                <div class="summary-item">
+                    <div class="summary-dot total"></div>
+                    <span>${totalCupos} cupos totales</span>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-dot disponible"></div>
+                    <span>${totalDisponibles} disponibles</span>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-dot ocupado"></div>
+                    <span>${totalOcupados} ocupados</span>
+                </div>
+            `;
+            
+            // Mostrar rango de fechas si existe
+            if (fechaInicio && fechaFin) {
+                resultsRange.textContent = `Del ${formatearFecha(fechaInicio)} al ${formatearFecha(fechaFin)}`;
+            } else {
+                resultsRange.textContent = '';
+            }
+            
+            let html = '';
+            cupos.forEach((cupo, index) => {
+                const cuposDisponibles = cupo.cupos_disponibles || 0;
+                const cuposTotales = cupo.cupos_totales || 0;
+                const cuposOcupados = cupo.cupos_ocupados || 0;
+                
+                let claseDisponibles = 'cero';
+                
+                if (cuposDisponibles > 10) claseDisponibles = 'alto';
+                else if (cuposDisponibles > 5) claseDisponibles = 'medio';
+                else if (cuposDisponibles > 0) claseDisponibles = 'bajo';
+                
+                html += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${formatearFecha(cupo.fecha)}</td>
+                        <td><span class="turno ${cupo.turno ? cupo.turno.toLowerCase() : ''}">${capitalizeFirst(cupo.turno || 'N/A')}</span></td>
+                        <td>${cupo.consultorio || 'N/A'}</td>
+                        <td><strong>${cuposTotales}</strong></td>
+                        <td>${cuposOcupados}</td>
+                        <td><span class="cupos-disponibles ${claseDisponibles}">${cuposDisponibles}</span></td>
+                    </tr>
+                `;
+            });
+            
+            tableBody.innerHTML = html;
+            results.style.display = 'block';
+        }
+
+        function mostrarSinResultados() {
+            document.getElementById('noResults').style.display = 'block';
+        }
+
+        function mostrarError(mensaje) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.innerHTML = `<div class="error">❌ ${mensaje}</div>`;
+            errorDiv.style.display = 'block';
+        }
+
+        function formatearFecha(fecha) {
+            if (!fecha) return 'N/A';
+            
+            try {
+                // Si ya es una fecha válida, usarla directamente
+                let date;
+                if (fecha.includes('T')) {
+                    date = new Date(fecha);
+                } else {
+                    // Asegurar formato YYYY-MM-DD y agregar hora
+                    date = new Date(fecha + 'T00:00:00');
+                }
+                
+                // Verificar si la fecha es válida
+                if (isNaN(date.getTime())) {
+                    return fecha; // Devolver la fecha original si no se puede parsear
+                }
+                
+                return date.toLocaleDateString('es-PE', {
+                    weekday: 'short',
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+            } catch (error) {
+                console.error('Error formateando fecha:', fecha, error);
+                return fecha;
+            }
+        }
+
+        function capitalizeFirst(str) {
+            if (!str) return '';
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        // Eventos de búsqueda
+        document.getElementById('consultorio').addEventListener('input', function() {
+            clearTimeout(this.searchTimeout);
+            this.searchTimeout = setTimeout(() => {
+                buscarCuposDisponibles();
+            }, 500);
+        });
+
+        document.getElementById('turno').addEventListener('change', buscarCuposDisponibles);
+        document.getElementById('fechaInicio').addEventListener('change', buscarCuposDisponibles);
+        document.getElementById('fechaFin').addEventListener('change', buscarCuposDisponibles);
+        document.getElementById('mostrarDisponibles').addEventListener('change', buscarCuposDisponibles);
+        document.getElementById('mostrarOcupados').addEventListener('change', buscarCuposDisponibles);
+    </script>
+</body>
+</html>

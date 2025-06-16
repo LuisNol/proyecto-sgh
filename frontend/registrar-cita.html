@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Nueva Cita - Sistema de Citas Médicas</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><defs><radialGradient id="a" cx="50%" cy="0%" r="100%"><stop offset="0%" stop-color="rgba(255,255,255,0.1)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></radialGradient></defs><rect width="100" height="20" fill="url(%23a)"/></svg>');
+            pointer-events: none;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-links {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 2;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .form-container {
+            padding: 40px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-group .icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            pointer-events: none;
+        }
+
+        .form-group.has-icon input,
+        .form-group.has-icon select {
+            padding-right: 50px;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 160px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.6);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+            color: white;
+            border-left: 4px solid #27ae60;
+        }
+
+        .alert-error {
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+            color: white;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border-left: 4px solid #3498db;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .loading {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4facfe;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .cupos-info {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            color: #2d3436;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px 0;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="nav-links">
+                <a href="/" class="nav-link">
+                    <i class="fas fa-home"></i> Inicio
+                </a>
+            </div>
+            <h1><i class="fas fa-calendar-plus"></i> Registrar Nueva Cita</h1>
+            <p>Complete el formulario para agendar una cita médica</p>
+        </header>
+
+        <div class="form-container">
+            <div id="alertContainer"></div>
+            
+            <form id="citaForm">
+                <div class="form-grid">
+                    <div>
+                        <div class="form-group has-icon">
+                            <label for="dni">DNI <span class="required">*</span></label>
+                            <input type="text" id="dni" name="dni" required 
+                                   placeholder="Ingrese su DNI" maxlength="8" pattern="[0-9]{8}">
+                            <i class="fas fa-id-card icon"></i>
+                        </div>
+
+                        <div class="form-group has-icon">
+                            <label for="fecha_nacimiento">Fecha de Nacimiento <span class="required">*</span></label>
+                            <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                            <i class="fas fa-birthday-cake icon"></i>
+                        </div>
+
+                        <div class="form-group has-icon">
+                            <label for="fecha_cita">Fecha de la Cita <span class="required">*</span></label>
+                            <input type="date" id="fecha_cita" name="fecha_cita" required>
+                            <i class="fas fa-calendar icon"></i>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group has-icon">
+                            <label for="consultorio">Consultorio <span class="required">*</span></label>
+                            <select id="consultorio" name="consultorio" required>
+                                <option value="">Seleccione un consultorio</option>
+                                <option value="Cardiología">Cardiología</option>
+                                <option value="Dermatología">Dermatología</option>
+                                <option value="Endocrinología">Endocrinología</option>
+                                <option value="Gastroenterología">Gastroenterología</option>
+                                <option value="Ginecología">Ginecología</option>
+                                <option value="Medicina General">Medicina General</option>
+                                <option value="Neurología">Neurología</option>
+                                <option value="Oftalmología">Oftalmología</option>
+                                <option value="Pediatría">Pediatría</option>
+                                <option value="Psiquiatría">Psiquiatría</option>
+                                <option value="Traumatología">Traumatología</option>
+                                <option value="Urología">Urología</option>
+                                <option value="Odontología">Odontología</option>
+                            </select>
+                            <i class="fas fa-hospital icon"></i>
+                        </div>
+
+                        <div class="form-group has-icon">
+                            <label for="turno">Turno <span class="required">*</span></label>
+                            <select id="turno" name="turno" required>
+                                <option value="">Seleccione un turno</option>
+                                <option value="Mañana">Mañana (8:00 - 12:00)</option>
+                                <option value="Tarde">Tarde (14:00 - 18:00)</option>
+                            </select>
+                            <i class="fas fa-clock icon"></i>
+                        </div>
+
+                        <div class="form-group has-icon">
+                            <label for="prescriptor">Médico Prescriptor (Opcional)</label>
+                            <input type="text" id="prescriptor" name="prescriptor" 
+                                   placeholder="Nombre del médico que refiere">
+                            <i class="fas fa-user-md icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cupos-info" id="cuposInfo">
+                    <i class="fas fa-info-circle"></i>
+                    <span id="cuposTexto"></span>
+                </div>
+
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <span>Procesando solicitud...</span>
+                </div>
+
+                <div class="btn-container">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-calendar-check"></i>
+                        Registrar Cita
+                    </button>
+                    <a href="/disponibles" class="btn btn-secondary">
+                        <i class="fas fa-search"></i>
+                        Ver Disponibilidad
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Configurar fecha mínima para citas (no permitir fechas pasadas)
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('fecha_cita').min = today;
+        
+        // Configurar fecha máxima para fecha de nacimiento (no futuras)
+        document.getElementById('fecha_nacimiento').max = today;
+
+        // Función para mostrar alertas
+        function showAlert(message, type = 'info') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertClass = `alert-${type}`;
+            const iconMap = {
+                success: 'fas fa-check-circle',
+                error: 'fas fa-exclamation-circle',
+                info: 'fas fa-info-circle'
+            };
+            
+            alertContainer.innerHTML = `
+                <div class="alert ${alertClass}">
+                    <i class="${iconMap[type]}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            const alertElement = alertContainer.querySelector('.alert');
+            alertElement.style.display = 'flex';
+            
+            // Auto ocultar después de 5 segundos
+            setTimeout(() => {
+                alertElement.style.display = 'none';
+            }, 5000);
+        }
+
+        // Función para mostrar información de cupos
+        async function checkCupos() {
+            const fecha = document.getElementById('fecha_cita').value;
+            const consultorio = document.getElementById('consultorio').value;
+            const turno = document.getElementById('turno').value;
+            
+            if (fecha && consultorio && turno) {
+                try {
+                    const response = await fetch(`/cupos-disponibles?fecha=${fecha}&consultorio=${encodeURIComponent(consultorio)}&turno=${turno}`);
+                    const data = await response.json();
+                    
+                    const cuposInfo = document.getElementById('cuposInfo');
+                    const cuposTexto = document.getElementById('cuposTexto');
+                    
+                    if (data.cupos && data.cupos.length > 0) {
+                        const cupo = data.cupos[0];
+                        cuposTexto.textContent = `Cupos disponibles: ${cupo.cupos_disponibles} de ${cupo.cupos_totales}`;
+                        cuposInfo.style.display = 'flex';
+                        
+                        if (cupo.cupos_disponibles === 0) {
+                            cuposInfo.style.background = 'linear-gradient(135deg, #ff7675 0%, #fd79a8 100%)';
+                            cuposInfo.style.color = 'white';
+                        } else {
+                            cuposInfo.style.background = 'linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%)';
+                            cuposInfo.style.color = '#2d3436';
+                        }
+                    } else {
+                        cuposTexto.textContent = 'No hay información de cupos disponible para esta combinación';
+                        cuposInfo.style.display = 'flex';
+                        cuposInfo.style.background = 'linear-gradient(135deg, #74b9ff 0%, #0984e3 100%)';
+                        cuposInfo.style.color = 'white';
+                    }
+                } catch (error) {
+                    console.error('Error al verificar cupos:', error);
+                }
+            } else {
+                document.getElementById('cuposInfo').style.display = 'none';
+            }
+        }
+
+        // Event listeners para verificar cupos
+        document.getElementById('fecha_cita').addEventListener('change', checkCupos);
+        document.getElementById('consultorio').addEventListener('change', checkCupos);
+        document.getElementById('turno').addEventListener('change', checkCupos);
+
+        // Validación de DNI en tiempo real
+        document.getElementById('dni').addEventListener('input', function(e) {
+            const value = e.target.value.replace(/\D/g, ''); // Solo números
+            e.target.value = value;
+            
+            if (value.length === 8) {
+                e.target.style.borderColor = '#27ae60';
+            } else {
+                e.target.style.borderColor = '#e1e8ed';
+            }
+        });
+
+        // Manejo del formulario
+        document.getElementById('citaForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const loading = document.getElementById('loading');
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            
+            // Mostrar loading
+            loading.style.display = 'flex';
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+            
+            // Recopilar datos del formulario
+            const formData = {
+                dni: document.getElementById('dni').value,
+                fecha_nacimiento: document.getElementById('fecha_nacimiento').value,
+                fecha_cita: document.getElementById('fecha_cita').value,
+                consultorio: document.getElementById('consultorio').value,
+                turno: document.getElementById('turno').value,
+                prescriptor: document.getElementById('prescriptor').value || null
+            };
+            
+            try {
+                const response = await fetch('/crear-cita', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showAlert(`✅ ${data.mensaje}. Número de cupo: ${data.cupo}`, 'success');
+                    // Limpiar formulario
+                    document.getElementById('citaForm').reset();
+                    document.getElementById('cuposInfo').style.display = 'none';
+                    
+                    // Mostrar información adicional
+                    setTimeout(() => {
+                        showAlert(`📋 Detalles: ${data.consultorio} - ${data.fecha} - ${data.turno} - Cupo #${data.cupo}`, 'info');
+                    }, 3000);
+                } else {
+                    showAlert(`❌ ${data.error || 'Error al registrar la cita'}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('❌ Error de conexión. Intente nuevamente.', 'error');
+            } finally {
+                // Ocultar loading
+                loading.style.display = 'none';
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-calendar-check"></i> Registrar Cita';
+            }
+        });
+
+        // Animaciones de entrada
+        window.addEventListener('load', function() {
+            const formGroups = document.querySelectorAll('.form-group');
+            formGroups.forEach((group, index) => {
+                setTimeout(() => {
+                    group.style.animation = 'slideIn 0.6s ease forwards';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
