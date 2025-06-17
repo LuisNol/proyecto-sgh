@@ -38,14 +38,9 @@ services:
       - ./frontend:/app/frontend
     ports:
       - "3000:3000"
+    command: sh -c "npm install && node index.js"
     depends_on:
       - mysql
-    command: >
-      sh -c "apt-get update &&
-             apt-get install -y curl &&
-             curl -s https://raw.githubusercontent.com/eficode/wait-for/master/wait-for &&
-             chmod +x wait-for &&
-             ./wait-for mysql:3306 -- sh -c 'npm install && node index.js'"
 
 volumes:
   mysql_data:
