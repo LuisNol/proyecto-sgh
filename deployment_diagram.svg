@@ -1,0 +1,181 @@
+<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Styles -->
+  <defs>
+    <style>
+      .client-box { fill: #f8f9fa; stroke: #333; stroke-width: 2; }
+      .server-box { fill: #e3f2fd; stroke: #1976d2; stroke-width: 2; }
+      .database-box { fill: #f3e5f5; stroke: #7b1fa2; stroke-width: 2; }
+      .component-box { fill: #fff; stroke: #666; stroke-width: 1; }
+      .artifact-box { fill: #e8f5e8; stroke: #4caf50; stroke-width: 1; }
+      .text-title { font-family: 'Times New Roman', serif; font-size: 12px; font-weight: bold; text-anchor: middle; }
+      .text-small { font-family: 'Times New Roman', serif; font-size: 10px; text-anchor: middle; }
+      .text-label { font-family: 'Times New Roman', serif; font-size: 9px; text-anchor: middle; }
+      .connection { stroke: #333; stroke-width: 2; fill: none; }
+      .connection-dashed { stroke: #666; stroke-width: 1; stroke-dasharray: 5,5; fill: none; }
+      .arrow { fill: #333; }
+    </style>
+    
+    <!-- Arrow marker -->
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" class="arrow" />
+    </marker>
+  </defs>
+
+  <!-- Title -->Engine 8.0
+  
+
+  <!-- Actor -->
+  <g transform="translate(50, 80)">
+    <circle cx="20" cy="15" r="8" fill="none" stroke="#333" stroke-width="2"/>
+    <line x1="20" y1="23" x2="20" y2="45" stroke="#333" stroke-width="2"/>
+    <line x1="10" y1="35" x2="30" y2="35" stroke="#333" stroke-width="2"/>
+    <line x1="20" y1="45" x2="10" y2="65" stroke="#333" stroke-width="2"/>
+    <line x1="20" y1="45" x2="30" y2="65" stroke="#333" stroke-width="2"/>
+    <text x="20" y="80" class="text-small">Usuario</text>
+  </g>
+
+  <!-- Client Device Node -->
+  <rect x="150" y="60" width="200" height="120" class="client-box" rx="5"/>
+  <text x="250" y="85" class="text-small">«device»</text>
+  <text x="250" y="100" class="text-title">:ClientDevice</text>
+  
+  <!-- Web Browser Component -->
+  <rect x="165" y="110" width="170" height="50" class="component-box" rx="3"/>
+  <text x="175" y="125" class="text-label">«execution environment»</text>
+  <text x="250" y="140" class="text-small">WebBrowser</text>
+  <text x="250" y="153" class="text-label">{Web Application}</text>
+
+  <!-- Communication Path -->
+  <line x1="90" y1="120" x2="140" y2="120" class="connection" marker-end="url(#arrowhead)"/>
+  <text x="115" y="115" class="text-label">«uses»</text>
+
+  <!-- HTTPS Communication -->
+  <line x1="350" y1="120" x2="420" y2="120" class="connection" marker-end="url(#arrowhead)"/>
+  <text x="385" y="110" class="text-label">«HTTPS»</text>
+  <text x="385" y="135" class="text-label">TCP/IP</text>
+
+  <!-- DigitalOcean Droplet Node -->
+  <rect x="450" y="30" width="500" height="350" class="server-box" rx="8"/>
+  <text x="700" y="55" class="text-small">«device»</text>
+  <text x="700" y="70" class="text-title"> DigitalOceanDroplet</text>
+  <text x="700" y="85" class="text-label">{Ubuntu Server 22.04 LTS}</text>
+
+  <!-- Nginx Execution Environment -->
+  <rect x="470" y="100" width="150" height="60" class="component-box" rx="3"/>
+  <text x="475" y="115" class="text-label">«execution environment»</text>
+  <text x="545" y="130" class="text-small">:NginxServer</text>
+  <text x="545" y="145" class="text-label">{Reverse Proxy}</text>
+
+  <!-- Laravel API Execution Environment -->
+  <rect x="650" y="100" width="150" height="60" class="component-box" rx="3"/>
+  <text x="655" y="115" class="text-label">«execution environment»</text>
+  <text x="725" y="130" class="text-small">:Laravel Service</text>
+  <text x="725" y="145" class="text-label">{Backend API}</text>
+
+  <!-- Static Files Artifact -->
+  <rect x="470" y="180" width="150" height="50" class="artifact-box" rx="3"/>
+  <text x="475" y="195" class="text-label">«artifact»</text>
+  <text x="545" y="210" class="text-small">StaticFiles</text>
+  <text x="545" y="220" class="text-label">{CSS, JS, Images}</text>
+
+  <!-- JWT Service Component -->
+  <rect x="650" y="180" width="150" height="50" class="component-box" rx="3"/>
+  <text x="655" y="195" class="text-label">«component»</text>
+  <text x="725" y="210" class="text-small">JWTService</text>
+  <text x="725" y="220" class="text-label">{Authentication}</text>
+
+  <!-- Log Files Artifact -->
+  <rect x="820" y="100" width="100" height="60" class="component-box" rx="3"/>
+  <text x="825" y="115" class="text-label">«artifact»</text>
+  <text x="870" y="130" class="text-small">LogFiles</text>
+  <text x="870" y="145" class="text-label">{nginx/laravel}</text>
+
+  <!-- API Routes Artifact -->
+  <rect x="820" y="180" width="100" height="50" class="artifact-box" rx="3"/>
+  <text x="825" y="195" class="text-label">«artifact»</text>
+  <text x="870" y="210" class="text-small">API Routes</text>
+  <text x="870" y="220" class="text-label">{endpoints}</text>
+
+  <!-- PHP-FPM Process Manager -->
+  <rect x="470" y="250" width="200" height="50" class="component-box" rx="3"/>
+  <text x="475" y="265" class="text-label">«execution environment»</text>
+  <text x="570" y="280" class="text-small">PHP-FPM</text>
+  <text x="570" y="290" class="text-label">{Process Manager}</text>
+
+  <!-- SSL Certificate Artifact -->
+  <rect x="700" y="250" width="140" height="50" class="artifact-box" rx="3"/>
+  <text x="705" y="265" class="text-label">«artifact»</text>
+  <text x="770" y="280" class="text-small">SSLCertificate</text>
+  <text x="770" y="290" class="text-label">{Let's Encrypt}</text>
+
+  <!-- Environment Configuration -->
+  <rect x="470" y="320" width="200" height="50" class="component-box" rx="3"/>
+  <text x="475" y="335" class="text-label">«artifact»</text>
+  <text x="570" y="350" class="text-small">EnvironmentConfig</text>
+  <text x="570" y="360" class="text-label">{.env, configs}</text>
+
+  <!-- Database Server Node -->
+  <rect x="450" y="420" width="300" height="180" class="database-box" rx="8"/>
+  <text x="600" y="445" class="text-small">«device»</text>
+  <text x="600" y="460" class="text-title">:DatabaseServer</text>
+  <text x="600" y="475" class="text-label">{Same Droplet}</text>
+
+  <!-- MySQL Execution Environment -->
+  <rect x="470" y="490" width="130" height="70" class="component-box" rx="3"/>
+  <text x="475" y="505" class="text-label">«execution environment»</text>
+  <text x="535" y="520" class="text-small">:MySQL</text>
+  <text x="535" y="535" class="text-label">{Database Engine 8.2}</text>
+
+  <!-- Database Schema Artifact -->
+  <rect x="620" y="490" width="110" height="70" class="artifact-box" rx="3"/>
+  <text x="625" y="505" class="text-label">«artifact»</text>
+  <text x="675" y="520" class="text-small">DatabaseSchema</text>
+  <text x="675" y="535" class="text-label">{Tables, Views}</text>
+
+  <!-- External SMS Gateway -->
+  <rect x="800" y="450" width="150" height="80" class="component-box" rx="5" stroke-dasharray="5,5"/>
+  <text x="805" y="470" class="text-label">«external service»</text>
+  <text x="875" y="485" class="text-small">SMSGateway</text>
+  <text x="875" y="500" class="text-label">{Twilio/Nexmo}</text>
+
+  <!-- Monitoring System -->
+  <rect x="1000" y="100" width="120" height="200" class="component-box" rx="5" stroke-dasharray="3,3"/>
+  <text x="1005" y="120" class="text-label">«monitoring»</text>
+  <text x="1060" y="140" class="text-small">SystemMonitor</text>
+  <text x="1060" y="160" class="text-small">• CPU Usage</text>
+  <text x="1060" y="175" class="text-small">• Memory</text>
+  <text x="1060" y="190" class="text-small">• Disk Space</text>
+  <text x="1060" y="205" class="text-small">• Network</text>
+  <text x="1060" y="220" class="text-small">• MySQL Status</text>
+  <text x="1060" y="235" class="text-small">• Service Logs</text>
+
+  <!-- Internal server connections -->
+  <line x1="620" y1="130" x2="640" y2="130" class="connection" marker-end="url(#arrowhead)"/>
+  <text x="630" y="125" class="text-label">«HTTP»</text>
+
+  <line x1="725" y1="160" x2="725" y2="170" class="connection" marker-end="url(#arrowhead)"/>
+  <text x="735" y="165" class="text-label">«uses»</text>
+
+  <line x1="570" y1="300" x2="570" y2="310" class="connection" marker-end="url(#arrowhead)"/>
+  <text x="580" y="305" class="text-label">«configures»</text>
+
+  <!-- Database connection -->
+  <line x1="600" y1="380" x2="600" y2="410" class="connection" marker-end="url(#arrowhead)"/>
+  <text x="620" y="395" class="text-label">«TCP/IP»</text>
+  <text x="620" y="405" class="text-label">MySQL Protocol</text>
+
+  <!-- Laravel to Database connection -->
+  <line x1="725" y1="160" x2="725" y2="380" class="connection" stroke-dasharray="3,3"/>
+  <line x1="725" y1="380" x2="535" y2="480" class="connection" stroke-dasharray="3,3" marker-end="url(#arrowhead)"/>
+  <text x="650" y="320" class="text-label">«SQL»</text>
+
+  <!-- External SMS connection -->
+  <line x1="780" y1="200" x2="850" y2="200" class="connection-dashed"/>
+  <line x1="850" y1="200" x2="875" y2="440" class="connection-dashed" marker-end="url(#arrowhead)"/>
+  <text x="825" y="320" class="text-label">«API/HTTP»</text>
+
+  <!-- Monitoring connections -->
+  <line x1="950" y1="200" x2="990" y2="200" class="connection-dashed" marker-end="url(#arrowhead)"/>
+  <text x="970" y="195" class="text-label">«monitors»</text>
+
+</svg>
