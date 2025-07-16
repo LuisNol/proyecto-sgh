@@ -12,7 +12,7 @@ services:
       - "3000:3000"
     command: sh -c "npm install && node index.js"
     environment:
-      DB_HOST: 192.168.1.83   # IP del servidor Ubuntu
+      DB_HOST: 192.168.1.69   # IP del servidor Ubuntu
       DB_PORT: 3306
       DB_USER: sghuser
       DB_PASSWORD: sghpassword
